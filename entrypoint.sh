@@ -24,8 +24,6 @@ bootstrap:
 restapi:
   connect_address: '${PATRONI_KUBERNETES_POD_IP}:8008'
 postgresql:
-  parameters:
-    unix_socket_directories: /tmp
   data_dir: /var/lib/postgresql/data
   connect_address: '${PATRONI_KUBERNETES_POD_IP}:5432'
   authentication:
