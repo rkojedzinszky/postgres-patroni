@@ -8,6 +8,12 @@ ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
 RUN apt-get update && apt-get upgrade -y
 
+# Create postgres user manually, with explicit uid/gid
+# Arguments taken from /var/lib/dpkg/info/postgresql-common.postinst
+RUN groupadd -g 15432 postgres && \
+    useradd -g postgres -u 15432 -c "PostgreSQL administrator" -s /bin/bash \
+    -d /var/lib/postgresql -M postgres
+
 RUN apt-get install -y locales && sed -i -r -e '/en_US/s/^#[[:space:]]*//' /etc/locale.gen && locale-gen
 
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
