@@ -3,6 +3,8 @@ FROM debian:buster-slim
 MAINTAINER Richard Kojedzinszky <richard@kojedz.in>
 
 ENV POSTGRES_MAJOR 11
+# This must be a space delimited list
+ENV POSTGRES_MODULES "ip4r prefix"
 
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
@@ -18,7 +20,9 @@ RUN apt-get install -y locales && sed -i -r -e '/en_US/s/^#[[:space:]]*//' /etc/
 
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
-    apt-get install --no-install-suggests --no-install-recommends -y postgresql-${POSTGRES_MAJOR} patroni python3-kubernetes
+    apt-get install --no-install-suggests --no-install-recommends -y patroni python3-kubernetes \
+        postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
+    rm -rf /var/lib/apt/ /var/cache/apt/
 
 ADD entrypoint.sh /
 
