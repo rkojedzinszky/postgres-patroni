@@ -20,8 +20,11 @@ RUN apt-get install -y locales && sed -i -r -e '/en_US/s/^#[[:space:]]*//' /etc/
 
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
-    apt-get install --no-install-suggests --no-install-recommends -y patroni python3-kubernetes \
+    apt-get install --no-install-suggests --no-install-recommends -y \
         postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
+    apt-get install --no-install-suggests -y libpq5 python3 libpq-dev python3-pip && \
+    pip3 install 'patroni[kubernetes]==1.6.3' psycopg2 && \
+    apt-get remove -y --autoremove --purge libpq-dev python3-pip && \
     rm -rf /var/lib/apt/ /var/cache/apt/
 
 ADD entrypoint.sh /
