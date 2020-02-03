@@ -23,7 +23,7 @@ RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-
     apt-get install --no-install-suggests --no-install-recommends -y python3 python3-six python3-psycopg2 \
         postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
     apt-get install --no-install-suggests -y python3-pip && \
-    pip3 install 'patroni[kubernetes]==1.6.3' && \
+    pip3 install https://github.com/rkojedzinszky/patroni/archive/1.6.3-keepalive.zip kubernetes && \
     apt-get remove -y --autoremove --purge python3-pip && \
     rm -rf /var/lib/apt/ /var/cache/apt/
 
