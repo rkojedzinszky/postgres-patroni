@@ -32,7 +32,7 @@ ADD entrypoint.sh /
 ENV PATH "$PATH:/usr/lib/postgresql/${POSTGRES_MAJOR}/bin"
 
 EXPOSE 5432 8008
-USER postgres
+USER 15432
 WORKDIR /var/lib/postgresql
 
 CMD ["/entrypoint.sh"]
