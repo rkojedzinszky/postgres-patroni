@@ -2,11 +2,10 @@ FROM debian:buster-slim
 
 MAINTAINER Richard Kojedzinszky <richard@kojedz.in>
 
-ENV POSTGRES_MAJOR 11
-# This must be a space delimited list
-ENV POSTGRES_MODULES "ip4r prefix"
-
-ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+ENV POSTGRES_MAJOR=11 \
+    # This must be a space delimited list \
+    POSTGRES_MODULES="ip4r prefix" \
+    LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y locales-all
 
