@@ -6,6 +6,9 @@ ARG POSTGRES_MAJOR=11
 # This must be a space delimited list
 ARG POSTGRES_MODULES="ip4r prefix"
 
+# Patroni version
+ARG PATRONI_VERSION=1.6.5
+
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y locales-all
@@ -21,7 +24,7 @@ RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-
     apt-get install --no-install-suggests --no-install-recommends -y python3 python3-six python3-psycopg2 \
         postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
     apt-get install --no-install-suggests -y python3-pip && \
-    pip3 install 'patroni[kubernetes]==1.6.5' && \
+    pip3 install "patroni[kubernetes]==$PATRONI_VERSION" && \
     apt-get remove -y --autoremove --purge python3-pip && \
     rm -rf /var/lib/apt/ /var/cache/apt/
 
