@@ -5,6 +5,13 @@ platform:
   os: linux
 
 steps:
+- name: generate tags
+  image: alpine
+  commands:
+  - apk --no-cache add git
+  - git fetch --tags
+  - sh gen-tags.sh $${DRONE_STAGE_ARCH} > .tags
+
 - name: docker
   image: plugins/docker
   settings:
@@ -12,4 +19,3 @@ steps:
     username: rkojedzinszky
     password:
       from_secret: hub_docker_password
-    auto_tag: true

@@ -1,22 +1,43 @@
-image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}{{else}}latest{{/if}}
+---
 {{#if build.tags}}
+image: rkojedzinszky/postgres-patroni:{{build.tags.[0]}}
 tags:
 {{#each build.tags}}
 - {{this}}
 {{/each}}
-{{/if}}
 manifests:
-- image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}arm32v7
-  platform:
-    os: linux
-    architecture: arm
-    variant: v7
-- image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}arm64v8
+- image: rkojedzinszky/postgres-patroni:{{build.tags.[0]}}-arm64
   platform:
     os: linux
     architecture: arm64
     variant: v8
+- image: rkojedzinszky/postgres-patroni:{{build.tags.[0]}}-arm
+  platform:
+    os: linux
+    architecture: arm
+    variant: v7
+- image: rkojedzinszky/postgres-patroni:{{build.tags.[0]}}-amd64
+  platform:
+    os: linux
+    architecture: amd64
+
+{{else}}
+
+image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}{{else}}latest{{/if}}
+manifests:
+- image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}arm64
+  platform:
+    os: linux
+    architecture: arm64
+    variant: v8
+- image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}arm
+  platform:
+    os: linux
+    architecture: arm
+    variant: v7
 - image: rkojedzinszky/postgres-patroni:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}amd64
   platform:
     os: linux
     architecture: amd64
+
+{{/if}}

@@ -1,3 +1,4 @@
+---
 kind: pipeline
 name: manifest
 
@@ -5,11 +6,15 @@ platform:
   os: linux
 
 steps:
+- name: generate tags
+  image: alpine
+  commands:
+  - apk --no-cache add git
+  - git fetch --tags
+  - sh gen-tags.sh > .tags
+
 - image: plugins/manifest
   settings:
-    auto_tag: true
     username: rkojedzinszky
     password:
       from_secret: hub_docker_password
-
-depends_on: []
