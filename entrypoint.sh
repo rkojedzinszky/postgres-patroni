@@ -1,8 +1,5 @@
 #!/bin/sh
 
-: ${PATRONI_SYNCHRONOUS_MODE=False}
-: ${PATRONI_SYNCHRONOUS_MODE_STRICT=False}
-
 _umask=$(umask)
 umask 077
 cat > patroni.yml <<__EOF__
@@ -10,8 +7,6 @@ bootstrap:
   dcs:
     postgresql:
       use_pg_rewind: true
-    synchronous_mode: ${PATRONI_SYNCHRONOUS_MODE}
-    synchronous_mode_strict: ${PATRONI_SYNCHRONOUS_MODE_STRICT}
   initdb:
   - auth-host: md5
   - auth-local: trust
