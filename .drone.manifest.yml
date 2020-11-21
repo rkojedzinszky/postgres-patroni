@@ -17,4 +17,4 @@ steps:
   settings:
     username: rkojedzinszky
     password:
-      from_secret: hub_docker_password
+      from_secret: ghcr.io.password

@@ -15,7 +15,8 @@ steps:
 - name: docker
   image: plugins/docker
   settings:
-    repo: rkojedzinszky/postgres-patroni
+    repo: ghcr.io/rkojedzinszky/postgres-patroni
+    registry: ghcr.io
     username: rkojedzinszky
     password:
-      from_secret: hub_docker_password
+      from_secret: ghcr.io.password
