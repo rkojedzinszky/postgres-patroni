@@ -6,7 +6,7 @@ platform: {arch: arm64, os: linux, variant: v8}
 steps:
 - commands: [apk --no-cache add git, git fetch --tags, 'sh gen-tags.sh $${DRONE_STAGE_ARCH}
       > .tags']
-  image: alpine
+  image: alpine:3.12
   name: generate tags
 - image: plugins/docker
   name: docker
@@ -25,7 +25,7 @@ platform: {arch: arm, os: linux, variant: v7}
 steps:
 - commands: [apk --no-cache add git, git fetch --tags, 'sh gen-tags.sh $${DRONE_STAGE_ARCH}
       > .tags']
-  image: alpine
+  image: alpine:3.12
   name: generate tags
 - image: plugins/docker
   name: docker
@@ -44,7 +44,7 @@ platform: {arch: amd64, os: linux}
 steps:
 - commands: [apk --no-cache add git, git fetch --tags, 'sh gen-tags.sh $${DRONE_STAGE_ARCH}
       > .tags']
-  image: alpine
+  image: alpine:3.12
   name: generate tags
 - image: plugins/docker
   name: docker
