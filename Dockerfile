@@ -7,7 +7,7 @@ ARG POSTGRES_MAJOR=11
 ARG POSTGRES_MODULES="ip4r prefix"
 
 # Patroni version
-ARG PATRONI_VERSION=2.0.1
+ARG PATRONI_VERSION=2.0.2
 
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
@@ -22,7 +22,7 @@ RUN groupadd -g 15432 postgres && \
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
     apt-get install --no-install-suggests --no-install-recommends -y python3 python3-setuptools python3-six python3-psycopg2 \
-        postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
+    postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
     apt-get install --no-install-suggests -y python3-pip && \
     pip3 install "patroni[kubernetes]==$PATRONI_VERSION" && \
     apt-get remove -y --autoremove --purge python3-pip && \
