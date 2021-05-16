@@ -5,7 +5,7 @@ T_POSTFIXES=
 
 FULLTAG=$(git describe --tags)
 if [ "$DRONE_BUILD_EVENT" != "tag" ]; then
-	FULLTAG=${FULLTAG%-*}
+	FULLTAG=${FULLTAG%.*}
 	T_POSTFIXES="latest $(TZ=UTC date +%Y%m%d)"
 fi
 
