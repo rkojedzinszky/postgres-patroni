@@ -7,7 +7,7 @@ platform:
 
 steps:
 - name: generate tags
-  image: alpine
+  image: alpine:3.13
   commands:
   - apk --no-cache add git
   - git fetch --tags
