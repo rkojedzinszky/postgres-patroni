@@ -2,6 +2,10 @@ kind: pipeline
 name: default
 type: kubernetes
 
+resources:
+  requests:
+    memory: 192Mi
+
 steps:
 - name: generate tags
   image: alpine:3.13
