@@ -1,12 +1,11 @@
 kind: pipeline
 name: default
-
-platform:
-  os: linux
+type: kubernetes
 
 steps:
 - name: generate tags
   image: alpine:3.13
+  pull: always
   commands:
   - apk --no-cache add git
   - git fetch --tags
@@ -14,6 +13,7 @@ steps:
 
 - name: docker
   image: plugins/docker
+  pull: always
   settings:
     repo: ghcr.io/rkojedzinszky/postgres-patroni
     registry: ghcr.io
@@ -22,3 +22,12 @@ steps:
       from_secret: ghcr.io.password
     mirror:
       from_secret: hub_docker_mirror
+
+  privileged: true
+  volumes:
+    - name: docker
+      path: /var/lib/docker
+
+volumes:
+  - name: docker
+    temp: {}
