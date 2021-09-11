@@ -1,8 +1,8 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 MAINTAINER Richard Kojedzinszky <richard@kojedz.in>
 
-ARG POSTGRES_MAJOR=11
+ARG POSTGRES_MAJOR=13
 # This must be a space delimited list
 ARG POSTGRES_MODULES="ip4r prefix"
 
@@ -21,10 +21,10 @@ RUN groupadd -g 15432 postgres && \
 
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
-    apt-get install --no-install-suggests --no-install-recommends -y python3 python3-six \
+    apt-get install --no-install-suggests --no-install-recommends -y python-is-python3 python3-six \
     postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
     apt-get install --no-install-suggests -y python3-pip libpq-dev && \
-    pip3 install psycopg2 "patroni[kubernetes]==$PATRONI_VERSION" && \
+    pip install psycopg2 "patroni[kubernetes]==$PATRONI_VERSION" && \
     apt-get remove -y --autoremove --purge python3-pip libpq-dev && \
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
     patroni --version
