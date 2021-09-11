@@ -1,6 +1,5 @@
 #!/bin/sh
 
-T_PREFIX=11
 T_POSTFIXES=
 
 FULLTAG=$(git describe --tags)
@@ -8,9 +7,6 @@ if [ "$DRONE_BUILD_EVENT" != "tag" ]; then
 	FULLTAG=${FULLTAG%.*}
 	T_POSTFIXES="latest $(TZ=UTC date +%Y%m%d)"
 fi
-
-# Strip v
-FULLTAG=${FULLTAG#v}
 
 # Generate different tags
 tags=
@@ -26,15 +22,15 @@ done
 
 TAGS=
 
-for t in $tags; do
-	if [ -z "$T_POSTFIXES" ]; then
-		TAGS="$TAGS $T_PREFIX-$t"
-	else
+if [ -z "$T_POSTFIXES" ]; then
+	TAGS="$tags"
+else
+	for t in $tags; do
 		for p in $T_POSTFIXES; do
-			TAGS="$TAGS $T_PREFIX-$t-$p"
+			TAGS="$TAGS $t-$p"
 		done
-	fi
-done
+	done
+fi
 
 FINAL_TAGS=
 if [ $# -eq 0 ]; then
