@@ -1,6 +1,8 @@
-FROM debian:bullseye-slim
+ARG DEBIAN_DIST=bullseye
 
-MAINTAINER Richard Kojedzinszky <richard@kojedz.in>
+FROM debian:${DEBIAN_DIST}-slim
+
+LABEL maintainer Richard Kojedzinszky <richard@kojedz.in>
 
 ARG POSTGRES_MAJOR=13
 # This must be a space delimited list
@@ -21,10 +23,11 @@ RUN groupadd -g 15432 postgres && \
 
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
-    apt-get install --no-install-suggests --no-install-recommends -y python-is-python3 python3-six \
+    (test $(cut -d. -f 1 /etc/debian_version) -ge 11 && P_IS_P3=python-is-python3 || :) && \
+    apt-get install --no-install-suggests --no-install-recommends -y ${P_IS_P3} python3-six \
     postgresql-${POSTGRES_MAJOR} $(for p in $POSTGRES_MODULES; do echo postgresql-${POSTGRES_MAJOR}-$p; done) && \
     apt-get install --no-install-suggests -y python3-pip libpq-dev && \
-    pip install psycopg2 "patroni[kubernetes]==$PATRONI_VERSION" && \
+    pip3 install psycopg2 "patroni[kubernetes]==$PATRONI_VERSION" && \
     apt-get remove -y --autoremove --purge python3-pip libpq-dev && \
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
     patroni --version
