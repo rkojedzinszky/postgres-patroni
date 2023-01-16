@@ -6,6 +6,8 @@ on:
       - master
     tags:
       - "*.*.*"
+  schedule:
+    - cron: "4 0 * * 0"
 
 env:
   REGISTRY: ghcr.io
