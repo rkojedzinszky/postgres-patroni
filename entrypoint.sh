@@ -1,5 +1,8 @@
 #!/bin/sh
 
+: ${PATRONI_INITIAL_SYNCHRONOUS_MODE:=false}
+: ${PATRONI_INITIAL_SYNCHRONOUS_MODE_STRICT:=false}
+: ${PATRONI_INITIAL_SYNCHRONOUS_MODE_COUNT:=1}
 : ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION:=scram-sha-256}
 
 _umask=$(umask)
@@ -7,6 +10,9 @@ umask 077
 cat > patroni.yml <<__EOF__
 bootstrap:
   dcs:
+    synchronous_mode: ${PATRONI_INITIAL_SYNCHRONOUS_MODE}
+    synchronous_mode_strict: ${PATRONI_INITIAL_SYNCHRONOUS_MODE_STRICT}
+    synchronous_node_count: ${PATRONI_INITIAL_SYNCHRONOUS_MODE_COUNT}
     postgresql:
       parameters:
         password_encryption: ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION}
