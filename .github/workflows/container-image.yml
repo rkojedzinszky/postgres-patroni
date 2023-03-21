@@ -16,14 +16,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        include:
-          - DEBIAN_DIST: buster
-            POSTGRES_MAJOR: 11
-          - DEBIAN_DIST: bullseye
-            POSTGRES_MAJOR: 13
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -52,19 +44,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}
           tags: |
-            type=semver,pattern=${{ matrix.POSTGRES_MAJOR }}-{{major}}.{{minor}}.{{patch}}
-            type=semver,pattern=${{ matrix.POSTGRES_MAJOR }}-{{major}}.{{minor}}-${{ steps.tags.outputs.DATE }}
-            type=semver,pattern=${{ matrix.POSTGRES_MAJOR }}-{{major}}-${{ steps.tags.outputs.DATE }}
-            type=raw,value=${{ matrix.POSTGRES_MAJOR }}
-            type=raw,value=${{ matrix.POSTGRES_MAJOR }}-${{ steps.tags.outputs.DATE }}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
+            type=semver,pattern={{major}}.{{minor}}-${{ steps.tags.outputs.DATE }}
+            type=semver,pattern={{major}}-${{ steps.tags.outputs.DATE }}
+            type=raw,value=${{ steps.tags.outputs.DATE }}
 
       - name: Build and publish
         uses: docker/build-push-action@v3
         with:
           context: .
-          build-args: |
-            DEBIAN_DIST=${{ matrix.DEBIAN_DIST }}
-            POSTGRES_MAJOR=${{ matrix.POSTGRES_MAJOR }}
           platforms: linux/amd64, linux/arm/v7, linux/arm64/v8
           push: true
           tags: ${{ steps.meta.outputs.tags }}

@@ -43,4 +43,9 @@ unset PATRONI_SUPERUSER_PASSWORD PATRONI_REPLICATION_PASSWORD
 export KUBERNETES_NAMESPACE=$PATRONI_KUBERNETES_NAMESPACE
 export POD_NAME=$PATRONI_NAME
 
+# Tune path to currently installed postgresql version
+if [ -f data/PG_VERSION ]; then
+  export PATH="/usr/lib/postgresql/$(cat data/PG_VERSION)/bin:$PATH"
+fi
+
 exec patroni patroni.yml
