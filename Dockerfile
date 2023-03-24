@@ -1,5 +1,3 @@
-FROM debian:buster-slim AS buster
-
 FROM debian:bullseye-slim
 
 LABEL maintainer Richard Kojedzinszky <richard@kojedz.in>
@@ -12,7 +10,7 @@ ARG PATRONI_VERSION=2.1.7
 
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
-COPY --from=buster /etc/apt/sources.list /etc/apt/sources.list.d/buster.list
+COPY assets/ /
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y locales-all
 
@@ -31,8 +29,6 @@ RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-
     apt-get remove -y --autoremove --purge python3-pip libpq-dev && \
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
     patroni --version
-
-ADD entrypoint.sh /
 
 # Set default version, but entrypoint.sh overrides this
 # based on existing database installation
