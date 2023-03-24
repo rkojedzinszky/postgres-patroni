@@ -1,7 +1,7 @@
 # rkojedzinszky/postgres-patroni
 
-This is an Debian Bullseye based postgresql (version 13) image packaged with patroni to be used
-inside a Kubernetes cluster.
+This is a Debian Bullseye based image containing PostgreSQL versions 11 and 13. patroni is installed with
+dependencies to be used inside a Kubernetes cluster.
 
 ## Usage
 
