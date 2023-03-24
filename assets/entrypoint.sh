@@ -46,6 +46,8 @@ export POD_NAME=$PATRONI_NAME
 # Tune path to currently installed postgresql version
 if [ -f data/PG_VERSION ]; then
   export PATH="/usr/lib/postgresql/$(cat data/PG_VERSION)/bin:$PATH"
+elif [ -n "$FORCE_PG_VERSION" ]; then
+  export PATH="/usr/lib/postgresql/$FORCE_PG_VERSION/bin:$PATH"
 fi
 
 exec patroni patroni.yml
