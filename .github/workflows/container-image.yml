@@ -36,7 +36,7 @@ jobs:
       - name: Setup additional tags
         id: tags
         run: |
-          echo "::set-output name=DATE::$(date +%Y%m%d)"
+          echo "DATE=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
