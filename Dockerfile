@@ -6,7 +6,7 @@ LABEL maintainer Richard Kojedzinszky <richard@kojedz.in>
 ARG POSTGRES_MODULES="ip4r prefix"
 
 # Patroni version
-ARG PATRONI_VERSION=2.1.7
+ARG PATRONI_VERSION=3.0.2
 
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
