@@ -12,7 +12,7 @@ bootstrap:
   dcs:
     synchronous_mode: ${PATRONI_INITIAL_SYNCHRONOUS_MODE}
     synchronous_mode_strict: ${PATRONI_INITIAL_SYNCHRONOUS_MODE_STRICT}
-    synchronous_node_count: ${PATRONI_INITIAL_SYNCHRONOUS_MODE_COUNT}
+    synchronous_node_count: ${PATRONI_INITIAL_SYNCHRONOUS_NODE_COUNT}
     postgresql:
       parameters:
         password_encryption: ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION}
