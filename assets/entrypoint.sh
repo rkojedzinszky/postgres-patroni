@@ -5,6 +5,18 @@
 : ${PATRONI_INITIAL_SYNCHRONOUS_NODE_COUNT:=1}
 : ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION:=scram-sha-256}
 
+if [ -z "$PG_VERSION" ]; then
+  echo "[-] PG_VERSION not set. See https://github.com/rkojedzinszky/postgres-patroni#rkojedzinszkypostgres-patroni" >&2
+  exit 1
+fi
+
+if ! test -d "/usr/lib/postgresql/$PG_VERSION/bin"; then
+  echo "[-] Desired PostgreSQL version not supported ($PG_VERSION)" >&2
+  exit 2
+fi
+
+export PATH="/usr/lib/postgresql/$PG_VERSION/bin:$PATH"
+
 _umask=$(umask)
 umask 077
 cat > patroni.yml <<__EOF__
@@ -42,12 +54,5 @@ umask $_umask
 unset PATRONI_SUPERUSER_PASSWORD PATRONI_REPLICATION_PASSWORD
 export KUBERNETES_NAMESPACE=$PATRONI_KUBERNETES_NAMESPACE
 export POD_NAME=$PATRONI_NAME
-
-# Tune path to currently installed postgresql version
-if [ -f data/PG_VERSION ]; then
-  export PATH="/usr/lib/postgresql/$(cat data/PG_VERSION)/bin:$PATH"
-elif [ -n "$FORCE_PG_VERSION" ]; then
-  export PATH="/usr/lib/postgresql/$FORCE_PG_VERSION/bin:$PATH"
-fi
 
 exec patroni patroni.yml

@@ -30,10 +30,6 @@ RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
     patroni --version
 
-# Set default version, but entrypoint.sh overrides this
-# based on existing database installation
-ENV PATH "$PATH:/usr/lib/postgresql/13/bin"
-
 EXPOSE 5432 8008
 USER 15432
 WORKDIR /var/lib/postgresql
