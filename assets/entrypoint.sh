@@ -5,6 +5,14 @@
 : ${PATRONI_INITIAL_SYNCHRONOUS_NODE_COUNT:=1}
 : ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION:=scram-sha-256}
 
+PATRONI_NODE_TAG_ENV_PREFIX="PATRONI_NODE_$(echo "${PATRONI_NAME}" | sed -e "s/-/_/g")_TAG"
+get_node_tag()
+{
+	local var="$1"
+
+	eval echo "\$${PATRONI_NODE_TAG_ENV_PREFIX}_${var}"
+}
+
 if [ -z "$PG_VERSION" ]; then
   echo "[-] PG_VERSION not set. See https://github.com/rkojedzinszky/postgres-patroni#rkojedzinszkypostgres-patroni" >&2
   exit 1
@@ -49,6 +57,16 @@ postgresql:
     replication:
       password: '${PATRONI_REPLICATION_PASSWORD}'
 __EOF__
+
+# append node-local tags
+echo "tags:" >> patroni.yml
+for var in nosync nofailover; do
+	value=$(get_node_tag "$var")
+	if [ -n "$value" ]; then
+		echo "  $var: $value"
+	fi
+done >> patroni.yml
+
 umask $_umask
 
 unset PATRONI_SUPERUSER_PASSWORD PATRONI_REPLICATION_PASSWORD
