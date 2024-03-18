@@ -24,7 +24,9 @@ if ! test -d "/usr/lib/postgresql/$PG_VERSION/bin"; then
 fi
 
 export PATH="/usr/lib/postgresql/$PG_VERSION/bin:$PATH"
+unset PG_VERSION
 
+# generate bootstrap and tags configuration
 _umask=$(umask)
 umask 077
 cat > patroni.yml <<__EOF__
@@ -46,20 +48,10 @@ bootstrap:
   pg_hba:
   - host all all 0.0.0.0/0 ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION}
   - host replication ${PATRONI_REPLICATION_USERNAME} ${PATRONI_KUBERNETES_POD_IP}/16 ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION}
-restapi:
-  connect_address: '${PATRONI_KUBERNETES_POD_IP}:8008'
-postgresql:
-  data_dir: /var/lib/postgresql/data
-  connect_address: '${PATRONI_KUBERNETES_POD_IP}:5432'
-  authentication:
-    superuser:
-      password: '${PATRONI_SUPERUSER_PASSWORD}'
-    replication:
-      password: '${PATRONI_REPLICATION_PASSWORD}'
+
+tags:
 __EOF__
 
-# append node-local tags
-echo "tags:" >> patroni.yml
 for var in nosync nofailover; do
 	value=$(get_node_tag "$var")
 	if [ -n "$value" ]; then
@@ -69,8 +61,15 @@ done >> patroni.yml
 
 umask $_umask
 
-unset PATRONI_SUPERUSER_PASSWORD PATRONI_REPLICATION_PASSWORD
-export KUBERNETES_NAMESPACE=$PATRONI_KUBERNETES_NAMESPACE
-export POD_NAME=$PATRONI_NAME
+# configuration set through environment, with defaults
+: ${PATRONI_POSTGRESQL_DATA_DIR:=/var/lib/postgresql/data}
+: ${PATRONI_POSTGRESQL_PGPASS:=/tmp/pgpass}
+: ${PATRONI_POSTGRESQL_LISTEN:=0.0.0.0:5432}
+: ${PATRONI_POSTGRESQL_CONNECT_ADDRESS:=${PATRONI_KUBERNETES_POD_IP}:5432}
+: ${PATRONI_RESTAPI_LISTEN:=0.0.0.0:8008}
+: ${PATRONI_RESTAPI_CONNECT_ADDRESS:=${PATRONI_KUBERNETES_POD_IP}:8008}
+
+export PATRONI_POSTGRESQL_DATA_DIR PATRONI_POSTGRESQL_PGPASS PATRONI_POSTGRESQL_LISTEN PATRONI_POSTGRESQL_CONNECT_ADDRESS \
+  PATRONI_RESTAPI_LISTEN PATRONI_RESTAPI_CONNECT_ADDRESS
 
 exec patroni patroni.yml
