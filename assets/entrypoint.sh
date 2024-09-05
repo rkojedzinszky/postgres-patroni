@@ -61,11 +61,14 @@ done >> patroni.yml
 
 umask $_umask
 
-# configuration set through environment, with defaults
+# configuration through environment, with defaults
+: ${POSTGRESQL_PORT:=5432}
+
+# patroni configuration set through environment, with defaults
 : ${PATRONI_POSTGRESQL_DATA_DIR:=/var/lib/postgresql/data}
 : ${PATRONI_POSTGRESQL_PGPASS:=/tmp/pgpass}
-: ${PATRONI_POSTGRESQL_LISTEN:=0.0.0.0:5432}
-: ${PATRONI_POSTGRESQL_CONNECT_ADDRESS:=${PATRONI_KUBERNETES_POD_IP}:5432}
+: ${PATRONI_POSTGRESQL_LISTEN:=0.0.0.0:${POSTGRESQL_PORT}}
+: ${PATRONI_POSTGRESQL_CONNECT_ADDRESS:=${PATRONI_KUBERNETES_POD_IP}:${POSTGRESQL_PORT}}
 : ${PATRONI_RESTAPI_LISTEN:=0.0.0.0:8008}
 : ${PATRONI_RESTAPI_CONNECT_ADDRESS:=${PATRONI_KUBERNETES_POD_IP}:8008}
 
