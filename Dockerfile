@@ -9,7 +9,7 @@ ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
 COPY assets/ /
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y locales-all jq
+RUN apt-get update && apt-get upgrade -y && apt-get install -y locales-all jq rsync netcat-openbsd
 
 # Create postgres user manually, with explicit uid/gid
 # Arguments taken from /var/lib/dpkg/info/postgresql-common.postinst
