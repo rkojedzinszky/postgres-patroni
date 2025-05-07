@@ -20,7 +20,7 @@ RUN groupadd -g 15432 postgres && \
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
     apt-get install --no-install-suggests --no-install-recommends -y patroni \
-    $(bash -c "echo postgresql-{11,13,15} postgresql-{11,13,15}-{$(echo ${POSTGRES_MODULES} | sed -e "s/ /,/g")}") && \
+    $(bash -c "echo postgresql-{13,15} postgresql-{13,15}-{$(echo ${POSTGRES_MODULES} | sed -e "s/ /,/g")}") && \
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
     patroni --version
 
