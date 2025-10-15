@@ -1,7 +1,7 @@
 # rkojedzinszky/postgres-patroni
 
-This is a Debian based image containing [Patroni](https://github.com/zalando/patroni)
-and multiple PostgreSQL versions.
+This is a Debian Bookworm based image containing [Patroni](https://github.com/zalando/patroni)
+and multiple PostgreSQL versions from PGDG.
 
 Desired PostgreSQL major version must explicitly be set with `PG_VERSION` environment variable.
 
@@ -17,9 +17,7 @@ Images are tagged by date. This represents the day when the image was built.
 
 ## Supported Postgresql version policy
 
-The image will contain PostgreSQL versions supported by stable Debian distributions.
-
-PostgreSQL 15 was added on 20230616.
+The image will contain 2 versions of PostgreSQL from apt.postgresql.org (https://www.postgresql.org/download/linux/debian/).
 
 ## Supported versions
 

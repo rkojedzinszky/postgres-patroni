@@ -17,10 +17,11 @@ RUN groupadd -g 15432 postgres && \
     useradd -g postgres -u 15432 -c "PostgreSQL administrator" -s /bin/bash \
     -d /var/lib/postgresql -M postgres
 
-RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common && \
+RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common ca-certificates && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
-    apt-get install --no-install-suggests --no-install-recommends -y patroni \
-    $(bash -c "echo postgresql-{13,15} postgresql-{13,15}-{$(echo ${POSTGRES_MODULES} | sed -e "s/ /,/g")}") && \
+    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
+    apt-get install --no-install-suggests --no-install-recommends -y patroni/bookworm \
+    $(bash -c 'eval echo postgresql-{13,15} postgresql-{13,15}-{${POSTGRES_MODULES// /,}}') && \
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
     patroni --version
 
