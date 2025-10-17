@@ -20,9 +20,11 @@ RUN groupadd -g 15432 postgres && \
 RUN apt-get install --no-install-suggests --no-install-recommends -y postgresql-common ca-certificates && \
     sed -i -e '/create_main_cluster/s/^.*/create_main_cluster = false/' /etc/postgresql-common/createcluster.conf && \
     /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
-    apt-get install --no-install-suggests --no-install-recommends -y patroni/bookworm \
+    apt-get install --no-install-suggests --no-install-recommends -y patroni \
     $(bash -c 'eval echo postgresql-{13,15} postgresql-{13,15}-{${POSTGRES_MODULES// /,}}') && \
     rm -rf /var/lib/apt/ /var/cache/apt/ && \
+    # expect patroni version
+    dpkg --compare-versions $(patroni --version|cut -d' ' -f2) '>=' 4.0.7 && \
     patroni --version
 
 EXPOSE 5432 8008
