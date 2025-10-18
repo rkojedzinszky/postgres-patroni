@@ -30,5 +30,6 @@ The image will contain 2 versions of PostgreSQL from apt.postgresql.org (https:/
 Postgresql Version | introduced in tag | last supporting tag
 -|-|-
 11 | - | 20250316
-13 | - | -
+13 | - | 20251017
 15 | 20230616 | -
+17 | 20251018 | -
