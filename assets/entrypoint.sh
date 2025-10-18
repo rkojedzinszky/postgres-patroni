@@ -43,7 +43,7 @@ bootstrap:
   - auth-host: ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION}
   - auth-local: trust
   - encoding: UTF8
-  - locale: en_US.UTF-8
+  - locale: C
   - data-checksums
   pg_hba:
   - host all all 0.0.0.0/0 ${POSTGRES_INITIAL_PASSWORD_ENCRYPTION}
