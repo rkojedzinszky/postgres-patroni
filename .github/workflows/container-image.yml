@@ -16,6 +16,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        debian:
+          - bookworm
+          - trixie
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -44,17 +50,24 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.repository }}
           tags: |
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=semver,pattern={{major}}.{{minor}}-${{ steps.tags.outputs.DATE }}
-            type=semver,pattern={{major}}-${{ steps.tags.outputs.DATE }}
-            type=raw,value=${{ steps.tags.outputs.DATE }}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}-${{ matrix.debian }}
+            type=semver,pattern={{major}}.{{minor}}-${{ steps.tags.outputs.DATE }}-${{ matrix.debian }}
+            type=semver,pattern={{major}}-${{ steps.tags.outputs.DATE }}-${{ matrix.debian }}
+            type=raw,value=${{ steps.tags.outputs.DATE }}-${{ matrix.debian }}
+            type=raw,value=latest-${{ matrix.debian }},enable={{is_default_branch}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},enable=${{ matrix.debian == 'bookworm' }}
+            type=semver,pattern={{major}}.{{minor}}-${{ steps.tags.outputs.DATE }},enable=${{ matrix.debian == 'bookworm' }}
+            type=semver,pattern={{major}}-${{ steps.tags.outputs.DATE }},enable=${{ matrix.debian == 'bookworm' }}
+            type=raw,value=${{ steps.tags.outputs.DATE }},enable=${{ matrix.debian == 'bookworm' }}
+            type=raw,value=latest,enable=${{ matrix.debian == 'bookworm' && github.ref_name == github.event.repository.default_branch }}
 
       - name: Build and publish
         uses: docker/build-push-action@v3
         with:
           context: .
           platforms: linux/amd64, linux/arm64/v8
+          build-args: |
+            DEBIAN_CODENAME=${{ matrix.debian }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -1,9 +1,11 @@
-FROM debian:bookworm-slim
+ARG DEBIAN_CODENAME=bookworm
+
+FROM debian:${DEBIAN_CODENAME}-slim
 
 LABEL maintainer Richard Kojedzinszky <richard@kojedz.in>
 
 # This must be a space delimited list
-ARG POSTGRES_MODULES="ip4r prefix"
+ARG POSTGRES_MODULES="cron hypopg ip4r partman pgaudit pgvector postgis-3 postgis-3-scripts prefix repack rum"
 
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
